@@ -1,5 +1,7 @@
 # What is lldbg
+
 lldbg(local lua debugger) modified from RLdb(http://luaforge.net/projects/rldb/). Major changes:
+
 1. Add ability to attach to other process that runs lua scripts(like gdb --pid)
 2. Multiple lua_State support(although multithreading is not supported)
 3. Faster breakpoint check
@@ -7,9 +9,13 @@ lldbg(local lua debugger) modified from RLdb(http://luaforge.net/projects/rldb/)
 5. Now support n/s/o/c debug command(for Next line/Step in/Step out/Continue)
 
 # Usage
+
 ## Build
-> cd lldb && make;
-  cd lldbg && make
+
+```
+cd lldb && make;
+cd lldbg && make
+```
 
 MSVC build - Create a project and compile lldb/\*.c to lldb.dll and lldbg/\*.c to lldbg.exe. Remember to add -DOS_WIN to projects.
 
@@ -25,8 +31,11 @@ shoud type 'h' when debugging to see more, sorry :-(.
 # Tips
 1. In linux, send SIGUSR2 to a process will terminate it(so be careful using lldbg -p)
 2. Embeded lua-engine program can use code below to setup lldb support while create a new state(nobody want to care about the debugger):
-> lua_getglobal(L, "require");
-  lua_pushliteral(L, "lldb");
-  if (lua_pcall(L, 1, 0, 0)) {
-      lua_pop(L, 1);
-  }
+
+```
+lua_getglobal(L, "require");
+lua_pushliteral(L, "lldb");
+if (lua_pcall(L, 1, 0, 0)) {
+    lua_pop(L, 1);
+}
+```
