@@ -1,0 +1,51 @@
+!IFDEF DBG
+C_OPT=/nologo /c /MD /W3 /EHs /Zi /RTC1 /DWIN32_LEAN_AND_MEAN /D_CRT_SECURE_NO_DEPRECATE /DOS_WIN
+L_OPT=/nologo /DLL /DEBUG
+!ELSE
+C_OPT=/nologo /c /MD /W3 /EHs /O2 /DWIN32_LEAN_AND_MEAN /D_CRT_SECURE_NO_DEPRECATE /DOS_WIN
+L_OPT=/nologo /DLL
+!ENDIF
+
+all: lldb.dll _mt _copy
+	@
+
+lldb.dll: Debugger.obj Protocol.obj SocketBuf.obj
+	@link $(L_OPT) /out:$@ $** lua5.1.lib Ws2_32.lib
+
+Debugger.obj: Debugger.c
+	@cl $(C_OPT) $**
+
+Protocol.obj: Protocol.c
+	@cl $(C_OPT) $**
+
+SocketBuf.obj: SocketBuf.c
+	@cl $(C_OPT) $**
+
+_mt:
+	@mt /nologo -manifest lldb.dll.manifest -outputresource:lldb.dll
+
+!IFDEF DEV_ROOT
+_copy:
+    @copy /y lldb.dll $(DEV_ROOT)Lua\Package
+!ELSE
+_copy:
+
+!ENDIF
+
+clean:
+	@if exist *.obj del *.obj
+	@if exist *.pdb del *.pdb
+	@if exist *.ilk del *.ilk
+	@if exist *.idb del *.idb
+	@if exist *.exe del *.exe
+	@if exist *.manifest del *.manifest
+	@if exist *.dll del *.dll
+	@if exist *.lib del *.lib
+	@if exist *.exp del *.exp
+
+clear:
+	@if exist *.obj del *.obj
+	@if exist *.pdb del *.pdb
+	@if exist *.ilk del *.ilk
+	@if exist *.idb del *.idb
+	@if exist *.exp del *.exp

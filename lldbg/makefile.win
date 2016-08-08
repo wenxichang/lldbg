@@ -1,0 +1,51 @@
+!IFDEF DBG
+C_OPT=/nologo /c /MDd /W3 /EHsc /Zi /RTC1 /DWIN32_LEAN_AND_MEAN /D_CRT_SECURE_NO_DEPRECATE /DOS_WIN
+L_OPT=/nologo /DEBUG
+!ELSE
+C_OPT=/nologo /c /MD /W3 /EHsc /O2 /DWIN32_LEAN_AND_MEAN /D_CRT_SECURE_NO_DEPRECATE /DOS_WIN
+L_OPT=/nologo
+!ENDIF
+
+all: RLctrl.exe _mt _copy
+	@
+
+RLctrl.exe: Controller.obj SocketBuf.obj Dump.obj
+	@link $(L_OPT) /out:$@ $** Ws2_32.lib
+
+Controller.obj: Controller.c
+	@cl $(C_OPT) $**
+
+SocketBuf.obj: SocketBuf.c
+	@cl $(C_OPT) $**
+
+Dump.obj: Dump.c
+	@cl $(C_OPT) $**
+
+_mt:
+	@mt /nologo -manifest RLctrl.exe.manifest -outputresource:RLctrl.exe
+
+!IFDEF DEV_ROOT
+_copy:
+	@copy /y RLctrl.exe $(DEV_ROOT)Bin
+!ELSE
+_copy:
+
+!ENDIF
+
+clean:
+	@if exist *.obj del *.obj
+	@if exist *.pdb del *.pdb
+	@if exist *.ilk del *.ilk
+	@if exist *.idb del *.idb
+	@if exist *.exe del *.exe
+	@if exist *.manifest del *.manifest
+	@if exist *.dll del *.dll
+	@if exist *.lib del *.lib
+	@if exist *.exp del *.exp
+
+clear:
+	@if exist *.obj del *.obj
+	@if exist *.pdb del *.pdb
+	@if exist *.ilk del *.ilk
+	@if exist *.idb del *.idb
+	@if exist *.exp del *.exp
